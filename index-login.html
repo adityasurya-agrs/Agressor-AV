@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AWS Access Console — TKJ Lab</title>
+<script src="https://sdk.amazonaws.com/js/aws-sdk-2.1691.0.min.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
 
@@ -41,7 +42,6 @@
 
   ::selection{background:var(--orange); color:#0B1520;}
 
-  /* ---------- shell ---------- */
   .shell{
     width:100%;
     max-width:1180px;
@@ -55,7 +55,6 @@
     box-shadow:0 40px 80px -30px rgba(0,0,0,0.6);
   }
 
-  /* ---------- top strip ---------- */
   .topstrip{
     display:flex;
     align-items:center;
@@ -78,9 +77,12 @@
     color:var(--text-dim);
     margin-top:1px;
   }
-  .clock{font-family:'JetBrains Mono', monospace; font-size:12px; color:var(--text-dim);}
+  .clock{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    color:var(--text-dim);
+  }
 
-  /* ---------- radar logo ---------- */
   .radar-logo{
     width:42px;height:42px;position:relative;flex-shrink:0;
     border-radius:50%;
@@ -95,28 +97,34 @@
   .radar-blip.b2{animation-delay:0.9s;}
   .radar-blip.b3{animation-delay:1.7s;}
   @keyframes spin{from{transform:rotate(0deg);} to{transform:rotate(360deg);}}
-  @keyframes blip{0%,100%{opacity:0; r:0.8;} 10%{opacity:1; r:2.2;} 40%{opacity:0;}}
+  @keyframes blip{
+    0%,100%{opacity:0; r:0.8;}
+    10%{opacity:1; r:2.2;}
+    40%{opacity:0;}
+  }
 
-  /* ---------- tabs ---------- */
   .tabs{
     display:flex; gap:2px; padding:0 20px;
     background:var(--bg-panel-2); border-bottom:1px solid var(--line);
   }
   .tab-btn{
     appearance:none; background:transparent; border:none;
-    color:var(--text-dim); font-family:'JetBrains Mono', monospace;
-    font-size:12.5px; padding:12px 16px; cursor:pointer;
+    color:var(--text-dim);
+    font-family:'JetBrains Mono', monospace;
+    font-size:12.5px;
+    padding:12px 16px;
+    cursor:pointer;
     border-bottom:2px solid transparent;
     transition:color .15s ease, border-color .15s ease;
   }
   .tab-btn:hover{color:var(--text);}
   .tab-btn.active{color:var(--orange); border-bottom-color:var(--orange);}
 
-  /* ---------- main area ---------- */
   .main{display:flex; min-height:560px;}
 
   .rail{
-    width:38%; padding:44px 40px;
+    width:38%;
+    padding:44px 40px;
     background:linear-gradient(180deg, rgba(46,217,195,0.05), transparent 40%), var(--bg-deep);
     border-right:1px solid var(--line);
     display:flex; flex-direction:column; justify-content:space-between;
@@ -125,28 +133,29 @@
   .big-radar{width:210px;height:210px; margin:10px auto 26px; position:relative;}
   .big-radar svg{width:100%;height:100%;}
   .rail h1{
-    font-family:'Space Grotesk', sans-serif; font-size:22px;
-    line-height:1.35; font-weight:600; margin:0 0 10px;
+    font-family:'Space Grotesk', sans-serif;
+    font-size:22px; line-height:1.35; font-weight:600; margin:0 0 10px;
   }
   .rail h1 em{color:var(--teal); font-style:normal;}
   .rail p{font-size:13px; color:var(--text-dim); line-height:1.6; margin:0;}
   .rail-foot{
-    font-family:'JetBrains Mono', monospace; font-size:11px;
-    color:var(--text-dim); display:flex; flex-direction:column; gap:6px;
+    font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--text-dim);
+    display:flex; flex-direction:column; gap:6px;
   }
   .status-dot{
     display:inline-block;width:7px;height:7px;border-radius:50%;
     background:var(--ok); margin-right:7px; box-shadow:0 0 8px var(--ok);
   }
+  .status-dot.off{background:var(--text-dim); box-shadow:none;}
 
   .col{flex:1; padding:44px 48px; display:flex; flex-direction:column;}
   .col h2{font-family:'Space Grotesk', sans-serif; font-size:19px; margin:0 0 4px;}
-  .col .lead{font-size:12.5px; color:var(--text-dim); margin:0 0 28px;}
+  .col .lead{font-size:12.5px; color:var(--text-dim); margin:0 0 24px;}
 
   .field{margin-bottom:18px;}
   .field label{
-    display:block; font-family:'JetBrains Mono', monospace;
-    font-size:11px; color:var(--text-dim); margin-bottom:7px; letter-spacing:0.3px;
+    display:block; font-family:'JetBrains Mono', monospace; font-size:11px;
+    color:var(--text-dim); margin-bottom:7px; letter-spacing:0.3px;
   }
   .field input, .field select{
     width:100%; background:var(--bg-deep); border:1px solid var(--line);
@@ -157,9 +166,13 @@
   .field input:focus, .field select:focus{
     border-color:var(--teal); box-shadow:0 0 0 3px rgba(46,217,195,0.12);
   }
+  .field .hint{
+    color:var(--text-dim); font-size:10.5px; margin-top:6px;
+    font-family:'JetBrains Mono', monospace;
+  }
   .field .err{
-    display:none; color:var(--danger); font-size:11px;
-    font-family:'JetBrains Mono', monospace; margin-top:6px;
+    display:none; color:var(--danger); font-size:11px; margin-top:6px;
+    font-family:'JetBrains Mono', monospace;
   }
   .field.invalid input, .field.invalid select{border-color:var(--danger);}
   .field.invalid .err{display:block;}
@@ -188,8 +201,12 @@
   .btn-primary:disabled{background:#3A3120; color:#77705E; cursor:not-allowed;}
   .btn-ghost{background:transparent; border:1px solid var(--line); color:var(--text-dim);}
   .btn-ghost:hover{color:var(--text); border-color:var(--teal-dim);}
-  .btn-block{width:100%;}
-  .btn-auto{width:auto;}
+  .btn-outline{
+    background:transparent; border:1px solid var(--teal-dim); color:var(--teal);
+    width:auto; padding:10px 16px; font-size:12.5px;
+  }
+  .btn-outline:hover{background:rgba(46,217,195,0.08);}
+  .btn-outline:disabled{opacity:0.4; cursor:not-allowed;}
 
   .msg{
     font-family:'JetBrains Mono', monospace; font-size:11.5px;
@@ -198,28 +215,52 @@
   .msg.show{display:block;}
   .msg.error{background:rgba(255,103,103,0.08); border:1px solid rgba(255,103,103,0.35); color:var(--danger);}
   .msg.ok{background:rgba(74,222,128,0.08); border:1px solid rgba(74,222,128,0.35); color:var(--ok);}
+  .msg.info{background:rgba(46,217,195,0.08); border:1px solid rgba(46,217,195,0.35); color:var(--teal);}
 
-  /* ---------- config panel (summary + button) ---------- */
-  .cfg-summary{
+  .cfg-empty{
+    border:1px dashed var(--line); border-radius:var(--radius);
+    padding:26px; text-align:center; color:var(--text-dim);
+    font-family:'JetBrains Mono', monospace; font-size:12px; margin-bottom:18px;
+  }
+  .cfg-list{display:flex; flex-direction:column; gap:10px; margin-top:16px;}
+  .cfg-card{
     background:var(--bg-deep); border:1px solid var(--line); border-radius:var(--radius);
-    padding:16px; margin-bottom:20px; font-family:'JetBrains Mono', monospace; font-size:12px;
+    padding:14px 16px;
   }
-  .cfg-summary .row{display:flex; justify-content:space-between; padding:5px 0; color:var(--text-dim);}
-  .cfg-summary .row span:last-child{color:var(--text);}
-  .cfg-summary.empty{color:var(--text-dim); text-align:center; padding:26px 10px;}
+  .cfg-card .top{display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;}
+  .cfg-card .cname{font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:13.5px;}
+  .cfg-card .ctime{font-family:'JetBrains Mono', monospace; font-size:10.5px; color:var(--text-dim);}
+  .cfg-card .rows{
+    display:grid; grid-template-columns:1fr 1fr; gap:6px 14px;
+    font-family:'JetBrains Mono', monospace; font-size:11.5px; color:var(--text-dim);
+  }
+  .cfg-card .rows b{color:var(--text); font-weight:500;}
+  .cfg-note{
+    font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--text-dim);
+    background:var(--bg-deep); border:1px dashed var(--line); border-radius:var(--radius);
+    padding:12px; line-height:1.7; margin-top:16px;
+  }
+  .cfg-note b{color:var(--teal);}
 
-  /* ---------- history panel ---------- */
-  .hist-list{
-    display:none; flex-direction:column; gap:8px;
-    overflow-y:auto; max-height:380px; padding-right:4px; margin-top:18px;
+  .hist-toolbar{display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; gap:10px; flex-wrap:wrap;}
+  .source-tag{
+    font-family:'JetBrains Mono', monospace; font-size:10.5px; color:var(--text-dim);
+    display:flex; align-items:center; gap:6px;
   }
-  .hist-list.show{display:flex;}
+  .hist-list{
+    display:flex; flex-direction:column; gap:8px;
+    overflow-y:auto; max-height:380px; padding-right:4px;
+  }
   .hist-item{
     display:flex; align-items:center; justify-content:space-between; gap:14px;
     padding:11px 13px; background:var(--bg-deep); border:1px solid var(--line);
     border-radius:var(--radius); font-size:12.5px;
   }
-  .hist-item .who{font-family:'JetBrains Mono', monospace; color:var(--text);}
+  .hist-item .who{
+    font-family:'JetBrains Mono', monospace; color:var(--teal);
+    background:none; border:none; cursor:pointer; padding:0; text-align:left;
+  }
+  .hist-item .who:hover{text-decoration:underline;}
   .hist-item .when{color:var(--text-dim); font-size:11px; font-family:'JetBrains Mono', monospace;}
   .badge{
     font-family:'JetBrains Mono', monospace; font-size:10px;
@@ -229,38 +270,51 @@
   .badge.fail{background:rgba(255,103,103,0.12); color:var(--danger); border:1px solid rgba(255,103,103,0.3);}
   .empty-hist{
     color:var(--text-dim); font-size:12.5px; font-family:'JetBrains Mono', monospace;
-    padding:24px 0; text-align:center;
+    padding:30px 0; text-align:center;
   }
 
-  /* ---------- modal ---------- */
   .modal-overlay{
     position:fixed; inset:0; background:rgba(4,9,14,0.72);
     backdrop-filter:blur(3px);
     display:none; align-items:center; justify-content:center;
-    z-index:50; padding:20px;
+    z-index:100; padding:20px;
   }
   .modal-overlay.show{display:flex;}
   .modal-box{
-    width:100%; max-width:420px; background:var(--bg-panel-2);
-    border:1px solid var(--line); border-radius:8px;
-    padding:26px 26px 22px; position:relative;
+    width:100%; max-width:460px;
+    background:var(--bg-panel); border:1px solid var(--line); border-radius:8px;
     box-shadow:0 30px 60px -20px rgba(0,0,0,0.7);
+    max-height:88vh; display:flex; flex-direction:column;
     animation:modalIn .18s ease;
   }
-  @keyframes modalIn{from{opacity:0; transform:translateY(8px) scale(0.98);} to{opacity:1; transform:translateY(0) scale(1);}}
-  .modal-box h3{
-    font-family:'Space Grotesk', sans-serif; font-size:16px; margin:0 0 4px;
+  @keyframes modalIn{
+    from{opacity:0; transform:translateY(8px) scale(0.98);}
+    to{opacity:1; transform:translateY(0) scale(1);}
   }
-  .modal-box .modal-sub{font-size:12px; color:var(--text-dim); margin:0 0 20px;}
+  .modal-head{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 20px; border-bottom:1px solid var(--line); background:var(--bg-panel-2);
+  }
+  .modal-head h3{
+    margin:0; font-family:'Space Grotesk', sans-serif; font-size:15px; font-weight:600;
+  }
   .modal-close{
-    position:absolute; top:16px; right:16px; background:transparent; border:none;
-    color:var(--text-dim); font-size:18px; cursor:pointer; line-height:1;
+    background:transparent; border:none; color:var(--text-dim); font-size:18px;
+    cursor:pointer; line-height:1; padding:4px;
   }
   .modal-close:hover{color:var(--text);}
-  .modal-actions{display:flex; gap:10px; margin-top:4px;}
-  .modal-actions .btn{flex:1;}
+  .modal-body{padding:20px; overflow-y:auto;}
+  .modal-foot{padding:16px 20px; border-top:1px solid var(--line); display:flex; gap:10px; justify-content:flex-end;}
+  .modal-foot .btn{width:auto;}
 
-  /* ---------- quiz view ---------- */
+  .user-row{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:11px 13px; background:var(--bg-deep); border:1px solid var(--line);
+    border-radius:var(--radius); margin-bottom:8px; font-size:12.5px;
+  }
+  .user-row .uname{font-family:'JetBrains Mono', monospace; color:var(--text);}
+  .user-row .ucount{font-family:'JetBrains Mono', monospace; font-size:10.5px; color:var(--text-dim);}
+
   .quiz-wrap{display:none; padding:0;}
   .quiz-header{
     display:flex; align-items:center; justify-content:space-between;
@@ -275,9 +329,9 @@
   .q-text{font-family:'Space Grotesk', sans-serif; font-size:19px; font-weight:600; line-height:1.4; margin:0 0 22px;}
   .opt-list{display:flex; flex-direction:column; gap:10px; margin-bottom:24px;}
   .opt{
-    text-align:left; background:var(--bg-deep); border:1px solid var(--line);
-    color:var(--text); padding:13px 15px; border-radius:var(--radius);
-    font-size:13.5px; cursor:pointer; display:flex; gap:12px; align-items:center;
+    text-align:left; background:var(--bg-deep); border:1px solid var(--line); color:var(--text);
+    padding:13px 15px; border-radius:var(--radius); font-size:13.5px; cursor:pointer;
+    display:flex; gap:12px; align-items:center;
     transition:border-color .15s ease, background .15s ease;
   }
   .opt:hover{border-color:var(--teal-dim);}
@@ -296,6 +350,7 @@
     .rail{width:100%; border-right:none; border-bottom:1px solid var(--line);}
     .col{padding:32px 24px;}
     .quiz-body{padding:26px 20px;}
+    .cfg-card .rows{grid-template-columns:1fr;}
   }
 </style>
 </head>
@@ -303,7 +358,6 @@
 
 <div class="shell">
 
-  <!-- ===== TOP STRIP ===== -->
   <div class="topstrip">
     <div class="brand">
       <div class="radar-logo" id="miniRadar"></div>
@@ -315,7 +369,6 @@
     <div class="clock" id="clock">--:--:--</div>
   </div>
 
-  <!-- ===== LOGIN AREA ===== -->
   <div id="loginArea">
     <div class="tabs">
       <button class="tab-btn active" data-tab="login">MASUK</button>
@@ -352,13 +405,12 @@
           <p>Verifikasi identitasmu untuk mengakses konsol simulasi AWS dan melanjutkan ke sesi evaluasi TKJ.</p>
         </div>
         <div class="rail-foot">
-          <div><span class="status-dot"></span>Gateway status: operasional</div>
-          <div>Region aktif: ap-southeast-3 (Jakarta)</div>
-          <div>Protokol: TLS 1.3 · Simulasi lokal, tanpa server nyata</div>
+          <div><span class="status-dot off" id="ddbStatusDot"></span><span id="ddbStatusText">DynamoDB: belum terhubung</span></div>
+          <div>Region aktif: <span id="ddbRegionText">ap-southeast-3 (Jakarta)</span></div>
+          <div>Protokol: TLS 1.3 · Riwayat login tersimpan di DynamoDB</div>
         </div>
       </div>
 
-      <!-- LOGIN PANEL -->
       <div class="col" id="panel-login">
         <h2>Masuk ke Console</h2>
         <p class="lead">Gunakan kredensial lab kamu. Centang kotak verifikasi sebelum tombol masuk aktif.</p>
@@ -382,31 +434,38 @@
         <button class="btn btn-primary" id="loginBtn" disabled>Masuk ke Console</button>
       </div>
 
-      <!-- CONFIG PANEL -->
       <div class="col" id="panel-config" style="display:none;">
         <h2>Konfigurasi AWS</h2>
-        <p class="lead">Simpan kredensial simulasi CLI/console. Klik tombol di bawah untuk mengisi konfigurasi — hanya tampilan, tidak terhubung ke akun AWS sungguhan.</p>
+        <p class="lead">Belum ada konfigurasi tersimpan. Klik tombol di bawah untuk menghubungkan console ke tabel DynamoDB kamu — semua kolom wajib diisi.</p>
+        <button class="btn btn-outline" id="openConfigModalBtn" style="width:fit-content;">+ Konfigurasi Baru</button>
 
-        <div class="cfg-summary empty" id="cfgSummary">
-          Belum ada konfigurasi AWS yang tersimpan pada sesi ini.
+        <div id="cfgEmptyState" class="cfg-empty" style="margin-top:18px;">
+          Belum ada profil konfigurasi AWS yang disimpan pada sesi ini.
         </div>
+        <div class="cfg-list" id="cfgList"></div>
 
-        <button class="btn btn-primary" id="openCfgBtn">Isi Konfigurasi AWS</button>
+        <div class="cfg-note">
+          Konfigurasi ini akan dipakai untuk menyambungkan console ke <b>Amazon DynamoDB</b> secara langsung dari browser.<br>
+          Sebelum menyimpan, pastikan kamu sudah membuat tabel DynamoDB dengan <b>Partition key: id (String)</b>,
+          serta IAM user/role yang dipakai memiliki izin <b>dynamodb:PutItem</b> dan <b>dynamodb:Scan</b> pada tabel tersebut.<br>
+          Catatan: menyimpan Access Key/Secret Key langsung di browser hanya disarankan untuk keperluan lab/latihan, bukan untuk produksi.
+        </div>
       </div>
 
-      <!-- HISTORY PANEL -->
       <div class="col" id="panel-history" style="display:none;">
         <h2>Riwayat Login</h2>
-        <p class="lead">Klik tombol untuk menampilkan semua username yang pernah mencoba login pada sesi ini.</p>
-
-        <button class="btn btn-primary" id="toggleHistBtn">Tampilkan Riwayat Login</button>
-
-        <div class="hist-list" id="histList"></div>
+        <p class="lead">Klik nama pengguna untuk melihat detailnya, atau lihat ringkasan semua pengguna yang pernah login.</p>
+        <div class="hist-toolbar">
+          <div class="source-tag"><span class="status-dot off" id="histSourceDot"></span><span id="histSourceText">Sumber: lokal (sesi ini)</span></div>
+          <button class="btn btn-outline" id="openUsersModalBtn">Lihat Semua Pengguna</button>
+        </div>
+        <div class="hist-list" id="histList">
+          <div class="empty-hist">Belum ada percobaan login pada sesi ini.</div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- ===== QUIZ AREA ===== -->
   <div class="quiz-wrap" id="quizArea">
     <div class="quiz-header">
       <div class="quiz-title">Evaluasi <span>TKJ</span> — Teknik Komputer &amp; Jaringan</div>
@@ -428,56 +487,95 @@
         <div class="q-count">HASIL EVALUASI</div>
         <div class="result-score" id="resultScore">0 / 10</div>
         <div class="result-sub" id="resultSub">Sekian hasil kuis TKJ kamu.</div>
-        <button class="btn btn-primary btn-auto" id="retryBtn">Ulangi Kuis</button>
+        <button class="btn btn-primary" id="retryBtn" style="width:auto; padding:12px 26px;">Ulangi Kuis</button>
       </div>
     </div>
   </div>
 
 </div>
 
-<!-- ===== MODAL: Konfigurasi AWS ===== -->
-<div class="modal-overlay" id="cfgModal">
+<div class="modal-overlay" id="configModal">
   <div class="modal-box">
-    <button class="modal-close" id="cfgModalClose">&times;</button>
-    <h3>Isi Konfigurasi AWS</h3>
-    <p class="modal-sub">Semua kolom wajib diisi sebelum konfigurasi bisa disimpan.</p>
+    <div class="modal-head">
+      <h3>Hubungkan ke DynamoDB</h3>
+      <button class="modal-close" data-close="configModal">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="field" id="f-cname">
+        <label>NAMA PROFIL</label>
+        <input type="text" id="cfgName" placeholder="mis. profil-lab-tkj">
+        <div class="err">Nama profil wajib diisi.</div>
+      </div>
+      <div class="field" id="f-ckey">
+        <label>AWS ACCESS KEY ID</label>
+        <input type="text" id="cfgKey" placeholder="AKIAxxxxxxxxxxxxxxxx">
+        <div class="err">Access Key ID wajib diisi.</div>
+      </div>
+      <div class="field" id="f-csecret">
+        <label>AWS SECRET ACCESS KEY</label>
+        <input type="password" id="cfgSecret" placeholder="Masukkan secret key">
+        <div class="err">Secret Access Key wajib diisi.</div>
+      </div>
+      <div class="field" id="f-cregion">
+        <label>DEFAULT REGION</label>
+        <select id="cfgRegion">
+          <option value="">— Pilih region —</option>
+          <option value="ap-southeast-3">ap-southeast-3 (Jakarta)</option>
+          <option value="ap-southeast-1">ap-southeast-1 (Singapore)</option>
+          <option value="us-east-1">us-east-1 (N. Virginia)</option>
+          <option value="ap-northeast-1">ap-northeast-1 (Tokyo)</option>
+        </select>
+        <div class="err">Region wajib dipilih.</div>
+      </div>
+      <div class="field" id="f-ctable">
+        <label>NAMA TABEL DYNAMODB</label>
+        <input type="text" id="cfgTable" value="tkj_login_history" placeholder="tkj_login_history">
+        <div class="hint">Tabel harus sudah ada di DynamoDB dengan Partition key "id" (String).</div>
+        <div class="err">Nama tabel wajib diisi.</div>
+      </div>
+      <div class="field" id="f-coutput" style="margin-bottom:0;">
+        <label>OUTPUT FORMAT (CLI)</label>
+        <select id="cfgOutput">
+          <option value="">— Pilih format —</option>
+          <option>json</option>
+          <option>yaml</option>
+          <option>text</option>
+          <option>table</option>
+        </select>
+        <div class="err">Output format wajib dipilih.</div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" data-close="configModal">Batal</button>
+      <button class="btn btn-primary" id="saveConfigBtn" style="width:auto;">Simpan &amp; Hubungkan</button>
+    </div>
+  </div>
+</div>
 
-    <div class="field" id="f-accessKey">
-      <label>AWS ACCESS KEY ID</label>
-      <input type="text" id="accessKeyInput" placeholder="AKIAxxxxxxxxxxxxxxxx">
-      <div class="err">Access Key ID wajib diisi.</div>
+<div class="modal-overlay" id="usersModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3>Pengguna yang Pernah Login</h3>
+      <button class="modal-close" data-close="usersModal">&times;</button>
     </div>
-    <div class="field" id="f-secretKey">
-      <label>AWS SECRET ACCESS KEY</label>
-      <input type="password" id="secretKeyInput" placeholder="Masukkan secret access key">
-      <div class="err">Secret Access Key wajib diisi.</div>
+    <div class="modal-body" id="usersModalBody">
+      <div class="empty-hist">Belum ada data pengguna.</div>
     </div>
-    <div class="field" id="f-region">
-      <label>DEFAULT REGION</label>
-      <select id="regionInput">
-        <option value="">-- Pilih region --</option>
-        <option>ap-southeast-3 (Jakarta)</option>
-        <option>ap-southeast-1 (Singapore)</option>
-        <option>us-east-1 (N. Virginia)</option>
-        <option>ap-northeast-1 (Tokyo)</option>
-      </select>
-      <div class="err">Region wajib dipilih.</div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" data-close="usersModal">Tutup</button>
     </div>
-    <div class="field" id="f-output">
-      <label>OUTPUT FORMAT</label>
-      <select id="outputInput">
-        <option value="">-- Pilih format --</option>
-        <option>json</option>
-        <option>yaml</option>
-        <option>text</option>
-        <option>table</option>
-      </select>
-      <div class="err">Output format wajib dipilih.</div>
-    </div>
+  </div>
+</div>
 
-    <div class="modal-actions">
-      <button class="btn btn-ghost" id="cfgCancelBtn">Batal</button>
-      <button class="btn btn-primary" id="cfgSaveBtn">Simpan Konfigurasi</button>
+<div class="modal-overlay" id="userDetailModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3 id="userDetailTitle">Detail Login</h3>
+      <button class="modal-close" data-close="userDetailModal">&times;</button>
+    </div>
+    <div class="modal-body" id="userDetailBody"></div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" data-close="userDetailModal">Tutup</button>
     </div>
   </div>
 </div>
@@ -485,11 +583,12 @@
 <script>
 /* ===================== jam ===================== */
 function tickClock(){
-  document.getElementById('clock').textContent = new Date().toLocaleTimeString('id-ID', {hour12:false});
+  const el = document.getElementById('clock');
+  const now = new Date();
+  el.textContent = now.toLocaleTimeString('id-ID', {hour12:false});
 }
 setInterval(tickClock, 1000); tickClock();
 
-/* ===================== radar mini di header ===================== */
 document.getElementById('miniRadar').innerHTML = `
   <svg viewBox="0 0 100 100">
     <circle class="radar-ring" cx="50" cy="50" r="44"/>
@@ -513,10 +612,155 @@ tabBtns.forEach(btn=>{
     btn.classList.add('active');
     Object.values(panels).forEach(p=>p.style.display='none');
     panels[btn.dataset.tab].style.display='block';
+    if(btn.dataset.tab === 'history'){
+      refreshHistoryFromSource();
+    }
   });
 });
 
-/* ===================== verifikasi & login ===================== */
+/* ===================== modal helpers ===================== */
+function openModal(id){ document.getElementById(id).classList.add('show'); }
+function closeModal(id){ document.getElementById(id).classList.remove('show'); }
+document.querySelectorAll('[data-close]').forEach(btn=>{
+  btn.addEventListener('click', ()=> closeModal(btn.dataset.close));
+});
+document.querySelectorAll('.modal-overlay').forEach(ov=>{
+  ov.addEventListener('click', (e)=>{ if(e.target === ov) closeModal(ov.id); });
+});
+
+/* ===================== KONFIGURASI AWS + koneksi DynamoDB ===================== */
+let savedConfigs = [];   // in-memory, hanya untuk ditampilkan sebagai kartu di panel
+let ddb = null;          // instance AWS.DynamoDB.DocumentClient aktif
+let ddbTableName = null; // nama tabel yang sedang dipakai
+
+document.getElementById('openConfigModalBtn').addEventListener('click', ()=>{
+  ['f-cname','f-ckey','f-csecret','f-cregion','f-ctable','f-coutput'].forEach(id=>{
+    document.getElementById(id).classList.remove('invalid');
+  });
+  document.getElementById('cfgName').value = '';
+  document.getElementById('cfgKey').value = '';
+  document.getElementById('cfgSecret').value = '';
+  document.getElementById('cfgRegion').value = '';
+  document.getElementById('cfgTable').value = 'tkj_login_history';
+  document.getElementById('cfgOutput').value = '';
+  openModal('configModal');
+});
+
+document.getElementById('saveConfigBtn').addEventListener('click', ()=>{
+  const name = document.getElementById('cfgName').value.trim();
+  const key = document.getElementById('cfgKey').value.trim();
+  const secret = document.getElementById('cfgSecret').value.trim();
+  const region = document.getElementById('cfgRegion').value;
+  const table = document.getElementById('cfgTable').value.trim();
+  const output = document.getElementById('cfgOutput').value;
+
+  const fields = [
+    {id:'f-cname', ok: name.length > 0},
+    {id:'f-ckey', ok: key.length > 0},
+    {id:'f-csecret', ok: secret.length > 0},
+    {id:'f-cregion', ok: region.length > 0},
+    {id:'f-ctable', ok: table.length > 0},
+    {id:'f-coutput', ok: output.length > 0},
+  ];
+  let valid = true;
+  fields.forEach(f=>{
+    const el = document.getElementById(f.id);
+    if(!f.ok){ el.classList.add('invalid'); valid = false; }
+    else{ el.classList.remove('invalid'); }
+  });
+  if(!valid) return;
+
+  // sambungkan AWS SDK ke DynamoDB pakai kredensial ini
+  try{
+    AWS.config.update({
+      region: region,
+      credentials: new AWS.Credentials(key, secret)
+    });
+    ddb = new AWS.DynamoDB.DocumentClient();
+    ddbTableName = table;
+
+    document.getElementById('ddbStatusDot').classList.remove('off');
+    document.getElementById('ddbStatusText').textContent = `DynamoDB: terhubung (${table})`;
+    document.getElementById('ddbRegionText').textContent = region;
+  }catch(err){
+    console.error(err);
+  }
+
+  savedConfigs.unshift({
+    name, key,
+    secretMasked: '•'.repeat(Math.max(4, secret.length - 4)) + secret.slice(-4),
+    region, table, output,
+    time: new Date().toLocaleString('id-ID')
+  });
+  renderConfigs();
+  closeModal('configModal');
+
+  // segarkan riwayat kalau sedang di tab riwayat
+  refreshHistoryFromSource();
+});
+
+function renderConfigs(){
+  const empty = document.getElementById('cfgEmptyState');
+  const list = document.getElementById('cfgList');
+  if(savedConfigs.length === 0){
+    empty.style.display = 'block';
+    list.innerHTML = '';
+    return;
+  }
+  empty.style.display = 'none';
+  list.innerHTML = savedConfigs.map(c => `
+    <div class="cfg-card">
+      <div class="top">
+        <div class="cname">${c.name}</div>
+        <div class="ctime">${c.time}</div>
+      </div>
+      <div class="rows">
+        <div>Access Key: <b>${c.key}</b></div>
+        <div>Secret Key: <b>${c.secretMasked}</b></div>
+        <div>Region: <b>${c.region}</b></div>
+        <div>Tabel: <b>${c.table}</b></div>
+        <div>Output: <b>${c.output}</b></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ===================== fungsi DynamoDB: simpan & baca riwayat ===================== */
+async function saveLoginToDynamo(entry){
+  if(!ddb) return false;
+  const params = {
+    TableName: ddbTableName,
+    Item: {
+      id: Date.now().toString() + '-' + Math.random().toString(36).slice(2, 8),
+      username: entry.user,
+      status: entry.ok ? 'BERHASIL' : 'GAGAL',
+      loginTime: entry.time
+    }
+  };
+  try{
+    await ddb.put(params).promise();
+    return true;
+  }catch(err){
+    console.error('Gagal menyimpan riwayat ke DynamoDB:', err);
+    showMsg('Gagal menyimpan ke DynamoDB (cek Access Key/izin IAM/nama tabel). Riwayat sementara disimpan lokal saja.', 'error');
+    return false;
+  }
+}
+
+async function fetchHistoryFromDynamo(){
+  if(!ddb) return null;
+  try{
+    const data = await ddb.scan({ TableName: ddbTableName }).promise();
+    return (data.Items || [])
+      .map(it => ({ user: it.username, time: it.loginTime, ok: it.status === 'BERHASIL' }))
+      .sort((a, b) => (a.time < b.time ? 1 : -1));
+  }catch(err){
+    console.error('Gagal mengambil riwayat dari DynamoDB:', err);
+    return null;
+  }
+}
+
+/* ===================== login & riwayat login ===================== */
 const verifyCheck = document.getElementById('verifyCheck');
 const loginBtn = document.getElementById('loginBtn');
 const loginMsg = document.getElementById('loginMsg');
@@ -527,23 +771,47 @@ verifyCheck.addEventListener('change', ()=>{
   loginBtn.disabled = !verifyCheck.checked;
 });
 
-let loginHistory = []; // in-memory saja, reset tiap reload halaman
+let loginHistory = []; // cache lokal: hasil dari DynamoDB (jika terhubung) atau fallback sesi ini
 
 function renderHistory(){
   const list = document.getElementById('histList');
   if(loginHistory.length === 0){
-    list.innerHTML = '<div class="empty-hist">Belum ada percobaan login pada sesi ini.</div>';
+    list.innerHTML = '<div class="empty-hist">Belum ada percobaan login.</div>';
     return;
   }
-  list.innerHTML = loginHistory.map(h => `
+  list.innerHTML = loginHistory.map((h) => `
     <div class="hist-item">
       <div>
-        <div class="who">${h.user}</div>
+        <button class="who" data-user="${h.user}">${h.user}</button>
         <div class="when">${h.time}</div>
       </div>
       <div class="badge ${h.ok ? 'ok' : 'fail'}">${h.ok ? 'BERHASIL' : 'GAGAL'}</div>
     </div>
   `).join('');
+  list.querySelectorAll('.who').forEach(btn=>{
+    btn.addEventListener('click', ()=> showUserDetail(btn.dataset.user));
+  });
+}
+
+async function refreshHistoryFromSource(){
+  const dot = document.getElementById('histSourceDot');
+  const text = document.getElementById('histSourceText');
+  if(ddb){
+    text.textContent = 'Sumber: DynamoDB — memuat...';
+    const remote = await fetchHistoryFromDynamo();
+    if(remote){
+      loginHistory = remote;
+      dot.classList.remove('off');
+      text.textContent = `Sumber: DynamoDB (${ddbTableName})`;
+    }else{
+      dot.classList.add('off');
+      text.textContent = 'Sumber: lokal (DynamoDB gagal diakses)';
+    }
+  }else{
+    dot.classList.add('off');
+    text.textContent = 'Sumber: lokal (sesi ini — atur DynamoDB di tab Konfigurasi AWS)';
+  }
+  renderHistory();
 }
 
 function showMsg(text, type){
@@ -551,7 +819,7 @@ function showMsg(text, type){
   loginMsg.className = 'msg show ' + type;
 }
 
-loginBtn.addEventListener('click', ()=>{
+loginBtn.addEventListener('click', async ()=>{
   if(!verifyCheck.checked){
     showMsg('Kamu harus mencentang kotak verifikasi sebelum masuk.', 'error');
     return;
@@ -561,14 +829,21 @@ loginBtn.addEventListener('click', ()=>{
 
   if(!pass){
     showMsg('Password tidak boleh kosong.', 'error');
-    loginHistory.unshift({user, time:new Date().toLocaleString('id-ID'), ok:false});
-    renderHistory();
+    const entry = {user, time:new Date().toLocaleString('id-ID'), ok:false};
+    loginHistory.unshift(entry);
+    await saveLoginToDynamo(entry);
     return;
   }
 
-  loginHistory.unshift({user, time:new Date().toLocaleString('id-ID'), ok:true});
-  renderHistory();
-  showMsg('Verifikasi berhasil. Membuka console...', 'ok');
+  const entry = {user, time:new Date().toLocaleString('id-ID'), ok:true};
+  loginHistory.unshift(entry);
+
+  if(ddb){
+    showMsg('Verifikasi berhasil. Menyimpan ke DynamoDB & membuka console...', 'ok');
+    await saveLoginToDynamo(entry);
+  }else{
+    showMsg('Verifikasi berhasil. Membuka console... (DynamoDB belum terhubung, riwayat hanya lokal)', 'ok');
+  }
 
   setTimeout(()=>{
     document.getElementById('loginArea').style.display = 'none';
@@ -586,108 +861,76 @@ document.getElementById('logoutBtn').addEventListener('click', ()=>{
   loginBtn.disabled = true;
 });
 
-/* ===================== toggle riwayat login ===================== */
-const toggleHistBtn = document.getElementById('toggleHistBtn');
-const histList = document.getElementById('histList');
-toggleHistBtn.addEventListener('click', ()=>{
-  const willShow = !histList.classList.contains('show');
-  if(willShow){
-    renderHistory();
-    histList.classList.add('show');
-    toggleHistBtn.textContent = 'Sembunyikan Riwayat Login';
-  } else {
-    histList.classList.remove('show');
-    toggleHistBtn.textContent = 'Tampilkan Riwayat Login';
+/* ---- ringkasan semua pengguna (modal) ---- */
+document.getElementById('openUsersModalBtn').addEventListener('click', async ()=>{
+  await refreshHistoryFromSource();
+  const body = document.getElementById('usersModalBody');
+  if(loginHistory.length === 0){
+    body.innerHTML = '<div class="empty-hist">Belum ada pengguna yang login.</div>';
+    openModal('usersModal');
+    return;
   }
+  const grouped = {};
+  loginHistory.forEach(h=>{
+    if(!grouped[h.user]) grouped[h.user] = {count:0, lastOk:false, lastTime:h.time, seenOnce:false};
+    grouped[h.user].count++;
+    if(!grouped[h.user].seenOnce){
+      grouped[h.user].lastOk = h.ok;
+      grouped[h.user].lastTime = h.time;
+      grouped[h.user].seenOnce = true;
+    }
+  });
+  body.innerHTML = Object.keys(grouped).map(user => `
+    <div class="user-row">
+      <div>
+        <div class="uname">${user}</div>
+        <div class="ucount">${grouped[user].count}x percobaan · terakhir ${grouped[user].lastTime}</div>
+      </div>
+      <div class="badge ${grouped[user].lastOk ? 'ok' : 'fail'}">${grouped[user].lastOk ? 'BERHASIL' : 'GAGAL'}</div>
+    </div>
+  `).join('');
+  openModal('usersModal');
 });
 
-/* ===================== modal konfigurasi AWS ===================== */
-const cfgModal = document.getElementById('cfgModal');
-const openCfgBtn = document.getElementById('openCfgBtn');
-const cfgCancelBtn = document.getElementById('cfgCancelBtn');
-const cfgModalClose = document.getElementById('cfgModalClose');
-const cfgSaveBtn = document.getElementById('cfgSaveBtn');
-const cfgSummary = document.getElementById('cfgSummary');
-
-const accessKeyInput = document.getElementById('accessKeyInput');
-const secretKeyInput = document.getElementById('secretKeyInput');
-const regionInput = document.getElementById('regionInput');
-const outputInput = document.getElementById('outputInput');
-
-let awsConfig = null; // in-memory saja
-
-function openCfgModal(){
-  cfgModal.classList.add('show');
+/* ---- detail satu pengguna (klik nama di riwayat) ---- */
+function showUserDetail(username){
+  document.getElementById('userDetailTitle').textContent = `Riwayat: ${username}`;
+  const attempts = loginHistory.filter(h => h.user === username);
+  const body = document.getElementById('userDetailBody');
+  body.innerHTML = attempts.map(a => `
+    <div class="user-row">
+      <div class="uname">${a.time}</div>
+      <div class="badge ${a.ok ? 'ok' : 'fail'}">${a.ok ? 'BERHASIL' : 'GAGAL'}</div>
+    </div>
+  `).join('');
+  openModal('userDetailModal');
 }
-function closeCfgModal(){
-  cfgModal.classList.remove('show');
-  ['f-accessKey','f-secretKey','f-region','f-output'].forEach(id=>{
-    document.getElementById(id).classList.remove('invalid');
-  });
-}
-
-openCfgBtn.addEventListener('click', openCfgModal);
-cfgCancelBtn.addEventListener('click', closeCfgModal);
-cfgModalClose.addEventListener('click', closeCfgModal);
-cfgModal.addEventListener('click', (e)=>{ if(e.target === cfgModal) closeCfgModal(); });
-
-cfgSaveBtn.addEventListener('click', ()=>{
-  let valid = true;
-  const checks = [
-    ['f-accessKey', accessKeyInput.value.trim()],
-    ['f-secretKey', secretKeyInput.value.trim()],
-    ['f-region', regionInput.value],
-    ['f-output', outputInput.value],
-  ];
-  checks.forEach(([id, val])=>{
-    const el = document.getElementById(id);
-    if(!val){ el.classList.add('invalid'); valid = false; }
-    else{ el.classList.remove('invalid'); }
-  });
-  if(!valid) return;
-
-  awsConfig = {
-    accessKey: accessKeyInput.value.trim(),
-    secretKey: secretKeyInput.value.trim(),
-    region: regionInput.value,
-    output: outputInput.value,
-  };
-
-  const maskedKey = awsConfig.accessKey.length > 4
-    ? awsConfig.accessKey.slice(0,4) + '••••••••••••'
-    : '••••••••';
-  const maskedSecret = '•'.repeat(Math.min(20, Math.max(8, awsConfig.secretKey.length)));
-
-  cfgSummary.classList.remove('empty');
-  cfgSummary.innerHTML = `
-    <div class="row"><span>Access Key ID</span><span>${maskedKey}</span></div>
-    <div class="row"><span>Secret Access Key</span><span>${maskedSecret}</span></div>
-    <div class="row"><span>Region</span><span>${awsConfig.region}</span></div>
-    <div class="row"><span>Output format</span><span>${awsConfig.output}</span></div>
-  `;
-
-  closeCfgModal();
-  accessKeyInput.value=''; secretKeyInput.value=''; regionInput.value=''; outputInput.value='';
-  openCfgBtn.textContent = 'Ubah Konfigurasi AWS';
-});
 
 /* ===================== data kuis TKJ ===================== */
 const quizData = [
-  { q:"Perangkat jaringan yang berfungsi menghubungkan beberapa jaringan berbeda dan menentukan jalur terbaik untuk paket data adalah...", opts:["Switch","Router","Hub","Repeater"], correct:1 },
-  { q:"Pada model OSI, layer yang bertanggung jawab atas pengalamatan logis (IP address) dan routing adalah...", opts:["Data Link Layer","Transport Layer","Network Layer","Session Layer"], correct:2 },
-  { q:"Subnet mask 255.255.255.192 setara dengan notasi CIDR...", opts:["/26","/27","/28","/25"], correct:0 },
-  { q:"Protokol yang digunakan untuk menerjemahkan nama domain menjadi alamat IP adalah...", opts:["DHCP","FTP","DNS","SNMP"], correct:2 },
-  { q:"Kabel UTP kategori yang umum mendukung kecepatan hingga 1 Gbps pada jaringan LAN adalah...", opts:["Cat3","Cat5e","Cat1","Coaxial RG6"], correct:1 },
-  { q:"Konektor yang digunakan pada ujung kabel UTP untuk jaringan Ethernet adalah...", opts:["RJ-11","RJ-45","BNC","SC"], correct:1 },
-  { q:"Protokol yang digunakan untuk memberikan alamat IP secara otomatis kepada perangkat di jaringan adalah...", opts:["DHCP","HTTP","ARP","ICMP"], correct:0 },
-  { q:"Perintah pada command prompt/terminal untuk menguji konektivitas ke host lain adalah...", opts:["tracert","ping","ipconfig","netstat"], correct:1 },
-  { q:"Topologi jaringan di mana semua perangkat terhubung ke satu titik pusat (switch/hub) disebut topologi...", opts:["Bus","Ring","Star","Mesh"], correct:2 },
-  { q:"Alamat IP kelas C memiliki rentang oktet pertama...", opts:["1–126","128–191","192–223","224–239"], correct:2 }
+  { q:"Perangkat jaringan yang berfungsi menghubungkan beberapa jaringan berbeda dan menentukan jalur terbaik untuk paket data adalah...",
+    opts:["Switch","Router","Hub","Repeater"], correct:1 },
+  { q:"Pada model OSI, layer yang bertanggung jawab atas pengalamatan logis (IP address) dan routing adalah...",
+    opts:["Data Link Layer","Transport Layer","Network Layer","Session Layer"], correct:2 },
+  { q:"Subnet mask 255.255.255.192 setara dengan notasi CIDR...",
+    opts:["/26","/27","/28","/25"], correct:0 },
+  { q:"Protokol yang digunakan untuk menerjemahkan nama domain menjadi alamat IP adalah...",
+    opts:["DHCP","FTP","DNS","SNMP"], correct:2 },
+  { q:"Kabel UTP kategori yang umum mendukung kecepatan hingga 1 Gbps pada jaringan LAN adalah...",
+    opts:["Cat3","Cat5e","Cat1","Coaxial RG6"], correct:1 },
+  { q:"Konektor yang digunakan pada ujung kabel UTP untuk jaringan Ethernet adalah...",
+    opts:["RJ-11","RJ-45","BNC","SC"], correct:1 },
+  { q:"Protokol yang digunakan untuk memberikan alamat IP secara otomatis kepada perangkat di jaringan adalah...",
+    opts:["DHCP","HTTP","ARP","ICMP"], correct:0 },
+  { q:"Perintah pada command prompt/terminal untuk menguji konektivitas ke host lain adalah...",
+    opts:["tracert","ping","ipconfig","netstat"], correct:1 },
+  { q:"Topologi jaringan di mana semua perangkat terhubung ke satu titik pusat (switch/hub) disebut topologi...",
+    opts:["Bus","Ring","Star","Mesh"], correct:2 },
+  { q:"Alamat IP kelas C memiliki rentang oktet pertama...",
+    opts:["1–126","128–191","192–223","224–239"], correct:2 }
 ];
 
-let currentQ = 0;
-let score = 0;
-let answered = false;
+let currentQ = 0, score = 0, answered = false;
 
 function startQuiz(){
   currentQ = 0; score = 0; answered = false;
@@ -700,7 +943,7 @@ function renderQuestion(){
   answered = false;
   const item = quizData[currentQ];
   document.getElementById('qCount').textContent = `Soal ${currentQ+1} / ${quizData.length}`;
-  document.getElementById('progressFill').style.width = `${(currentQ/quizData.length)*100}%`;
+  document.getElementById('progressFill').style.width = `${((currentQ)/quizData.length)*100}%`;
   document.getElementById('qText').textContent = item.q;
   document.getElementById('nextBtn').disabled = true;
   document.getElementById('nextBtn').textContent = currentQ === quizData.length - 1 ? 'Lihat Hasil' : 'Lanjut';
@@ -746,8 +989,7 @@ document.getElementById('nextBtn').addEventListener('click', ()=>{
 
 function showResult(){
   document.getElementById('quizPlay').style.display = 'none';
-  const card = document.getElementById('resultCard');
-  card.style.display = 'block';
+  document.getElementById('resultCard').style.display = 'block';
   document.getElementById('resultScore').textContent = `${score} / ${quizData.length}`;
   let msg = '';
   const pct = score / quizData.length;
