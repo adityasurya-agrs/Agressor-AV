@@ -28,8 +28,8 @@ app.config.update(
 
 logging.basicConfig(level=logging.INFO)
 
-REGION = os.getenv("AWS_REGION", "ap-southeast-1")
-TABLE_NAME = os.getenv("DDB_TABLE", "tf141_players")
+REGION = os.getenv("AWS_REGION", "us-east-1")
+TABLE_NAME = os.getenv("DDB_TABLE", "TF141")
 
 dynamodb = boto3.resource("dynamodb", region_name=REGION)
 table = dynamodb.Table(TABLE_NAME)
