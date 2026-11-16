@@ -1,0 +1,1491 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TASK FORCE 141</title>
+
+<style>
+:root {
+    --bg: #061426;
+    --panel: rgba(9, 30, 54, .94);
+    --line: rgba(104, 190, 255, .23);
+    --cyan: #6bd5ff;
+    --muted: #9bb4ca;
+    --white: #eaf6ff;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--white);
+    font-family: Arial, sans-serif;
+    overflow-x: hidden;
+}
+
+#background {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    background:
+        radial-gradient(ellipse at 50% 40%, #12395b, #081d34 48%, #030b15);
+}
+
+#background::before {
+    content: "";
+    position: absolute;
+    inset: -20%;
+    opacity: .18;
+    background-image:
+        linear-gradient(rgba(100,190,255,.15) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(100,190,255,.15) 1px, transparent 1px);
+    background-size: 48px 48px;
+    transform: perspective(500px) rotateX(58deg) scale(1.5);
+    animation: gridmove 22s linear infinite;
+}
+
+@keyframes gridmove {
+    to { background-position: 0 48px, 48px 0; }
+}
+
+.scanlines {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 5;
+    opacity: .2;
+    background: linear-gradient(
+        transparent 50%,
+        rgba(80,170,255,.04) 50%
+    );
+    background-size: 100% 4px;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 5%;
+    background: rgba(3,13,25,.8);
+    border-bottom: 1px solid var(--line);
+    position: sticky;
+    top: 0;
+    z-index: 4;
+}
+
+.brand {
+    font-weight: 900;
+    letter-spacing: 3px;
+    font-size: 15px;
+}
+
+.brand span {
+    color: var(--cyan);
+}
+
+#status {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0 0 12px currentColor;
+}
+
+main {
+    width: min(1000px, 92%);
+    margin: 40px auto 70px;
+}
+
+.screen {
+    display: none;
+    opacity: 0;
+}
+
+.screen.active {
+    display: block;
+    animation: pageIn .4s ease forwards;
+}
+
+@keyframes pageIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+}
+
+.panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: clamp(20px, 4vw, 38px);
+    box-shadow: 0 20px 60px rgba(0,0,0,.24);
+}
+
+.center {
+    text-align: center;
+}
+
+.eyebrow {
+    color: var(--cyan);
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+.title {
+    font-size: clamp(30px, 6vw, 52px);
+    letter-spacing: 3px;
+    margin: 12px 0;
+}
+
+.subtitle {
+    color: var(--muted);
+    line-height: 1.75;
+}
+
+.radar {
+    width: 150px;
+    height: 150px;
+    margin: 25px auto;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(107,213,255,.6);
+    border-radius: 50%;
+    background:
+        repeating-radial-gradient(
+            circle,
+            transparent 0 23px,
+            rgba(107,213,255,.2) 24px 25px
+        ),
+        linear-gradient(90deg,
+            transparent 49.5%,
+            rgba(107,213,255,.3) 50%,
+            transparent 50.5%
+        ),
+        linear-gradient(
+            transparent 49.5%,
+            rgba(107,213,255,.3) 50%,
+            transparent 50.5%
+        );
+}
+
+.radar::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: conic-gradient(
+        transparent 0deg,
+        transparent 270deg,
+        rgba(71,205,255,.5) 330deg,
+        transparent 360deg
+    );
+    animation: radarSpin 3s linear infinite;
+}
+
+.radar::after {
+    content: "";
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: white;
+    left: 65%;
+    top: 32%;
+    box-shadow:
+        0 0 12px #71dfff,
+        -40px 45px 0 #71dfff,
+        30px 35px 0 #71dfff;
+}
+
+@keyframes radarSpin {
+    to { transform: rotate(360deg); }
+}
+
+input {
+    width: 100%;
+    padding: 14px;
+    margin: 9px 0 16px;
+    background: #071a2d;
+    color: white;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    outline: none;
+}
+
+input:focus {
+    border-color: var(--cyan);
+}
+
+label {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+button {
+    cursor: pointer;
+    padding: 12px 18px;
+    border: 1px solid rgba(107,213,255,.45);
+    border-radius: 8px;
+    background: linear-gradient(135deg,#12517a,#0b2c4b);
+    color: white;
+    font-weight: bold;
+    transition: .2s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    border-color: var(--cyan);
+    box-shadow: 0 7px 22px rgba(40,160,230,.18);
+}
+
+button:disabled {
+    opacity: .35;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.secondary {
+    background: transparent;
+    color: var(--muted);
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.error {
+    min-height: 20px;
+    color: #ff9d9d;
+    font-size: 13px;
+}
+
+.small {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(
+        auto-fit,
+        minmax(210px, 1fr)
+    );
+    gap: 14px;
+    margin-top: 24px;
+}
+
+.card {
+    background: rgba(5,22,40,.85);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 20px;
+    transition: .2s;
+}
+
+.card:hover {
+    border-color: var(--cyan);
+    transform: translateY(-3px);
+}
+
+.card h3 {
+    margin: 10px 0;
+}
+
+.card p {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.65;
+}
+
+.card button {
+    width: 100%;
+    margin-top: 12px;
+}
+
+.tag {
+    color: var(--cyan);
+    font-size: 10px;
+    letter-spacing: 2px;
+}
+
+.progress {
+    height: 5px;
+    background: #18334b;
+    border-radius: 10px;
+    margin: 20px 0;
+    overflow: hidden;
+}
+
+.progress span {
+    display: block;
+    height: 100%;
+    background: var(--cyan);
+    width: 0;
+    transition: width .3s;
+}
+
+.choice {
+    display: block;
+    width: 100%;
+    text-align: left;
+    margin: 10px 0;
+    padding: 15px;
+    line-height: 1.5;
+    font-weight: normal;
+    background: rgba(5,22,40,.9);
+}
+
+.choice.selected {
+    border-color: var(--cyan);
+    background: rgba(24,91,128,.4);
+}
+
+.quote {
+    border-left: 2px solid var(--cyan);
+    padding: 12px 16px;
+    margin: 22px 0;
+    color: #b9d6e9;
+    font-style: italic;
+}
+
+.hidden {
+    display: none !important;
+}
+
+#loading {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    background: #030d18;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: opacity .5s;
+}
+
+.loaderline {
+    width: 180px;
+    height: 2px;
+    background: #17334b;
+    overflow: hidden;
+    margin-top: 18px;
+}
+
+.loaderline::after {
+    content: "";
+    display: block;
+    width: 40%;
+    height: 100%;
+    background: var(--cyan);
+    animation: loadingBar 1.2s infinite;
+}
+
+@keyframes loadingBar {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(450%); }
+}
+
+@media(max-width:600px) {
+    header {
+        padding: 14px 4%;
+    }
+
+    .brand {
+        letter-spacing: 1px;
+    }
+
+    main {
+        margin-top: 24px;
+    }
+
+    .actions button {
+        flex: 1;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div id="background"></div>
+<div class="scanlines"></div>
+
+<div id="loading">
+    <div class="radar"></div>
+    <div class="eyebrow">TASK FORCE 141</div>
+    <div class="loaderline"></div>
+    <p class="small">INITIALIZING SYSTEM...</p>
+</div>
+
+<header>
+    <div class="brand">TASK FORCE <span>141</span></div>
+    <div id="status">SYSTEM OFFLINE</div>
+</header>
+
+<main>
+
+<!-- LOGIN -->
+
+<section id="auth" class="screen active">
+    <div class="panel center">
+
+        <div class="eyebrow">SECURE PERSONNEL ACCESS</div>
+
+        <div class="radar"></div>
+
+        <h1 class="title">TASK FORCE 141</h1>
+
+        <p class="subtitle">
+            Welcome to the operational command system.
+            Your decisions determine the outcome.
+        </p>
+
+        <div style="max-width:380px;margin:auto;text-align:left">
+
+            <label>USERNAME</label>
+            <input id="username"
+                maxlength="20"
+                autocomplete="username"
+                placeholder="Enter username">
+
+            <label>PASSWORD</label>
+            <input id="password"
+                type="password"
+                autocomplete="current-password"
+                placeholder="Enter password">
+
+            <div class="actions">
+                <button id="loginBtn" style="flex:1">
+                    LOGIN
+                </button>
+
+                <button id="registerBtn"
+                    class="secondary" style="flex:1">
+                    REGISTER
+                </button>
+            </div>
+
+            <div id="authError" class="error"></div>
+
+            <p class="small">
+                Username 3-20 karakter.
+                Password minimal 8 karakter.
+            </p>
+        </div>
+    </div>
+</section>
+
+
+<!-- HUB -->
+
+<section id="hub" class="screen">
+    <div class="panel">
+
+        <div class="eyebrow">COMMAND CENTER</div>
+
+        <h1 class="title" style="font-size:36px">
+            WELCOME BACK
+        </h1>
+
+        <p class="subtitle">
+            Personnel database terhubung.
+            Pilih jalur tugas untuk memulai kampanye.
+        </p>
+
+        <p id="welcomeName"></p>
+
+        <div class="actions">
+            <button id="toRoles">SELECT ROLE</button>
+
+            <button id="backLogin" class="secondary">
+                LOGOUT
+            </button>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ROLES -->
+
+<section id="roles" class="screen">
+
+    <div class="eyebrow">PERSONNEL ASSIGNMENT</div>
+
+    <h1 class="title" style="font-size:36px">
+        SELECT YOUR ROLE
+    </h1>
+
+    <p class="subtitle">
+        Pilih satu dari lima role yang tersedia.
+        Setiap role mempunyai cerita dan enam misi berbeda.
+    </p>
+
+    <div id="roleCards" class="cards"></div>
+
+    <div class="actions">
+        <button id="rolesBack" class="secondary">
+            BACK
+        </button>
+    </div>
+
+</section>
+
+
+<!-- MISSIONS -->
+
+<section id="missions" class="screen">
+
+    <div class="eyebrow">OPERATION ARCHIVE</div>
+
+    <h1 class="title" style="font-size:36px">
+        MISSION SELECT
+    </h1>
+
+    <p id="roleDescription" class="subtitle"></p>
+
+    <div id="missionCards" class="cards"></div>
+
+    <div class="actions">
+        <button id="missionsBack" class="secondary">
+            CHANGE ROLE
+        </button>
+    </div>
+
+</section>
+
+
+<!-- GAME -->
+
+<section id="game" class="screen">
+
+    <div class="eyebrow" id="missionTag">
+        OPERATION
+    </div>
+
+    <h1 id="missionTitle" class="title"
+        style="font-size:34px">
+        MISSION
+    </h1>
+
+    <div id="stepLabel" class="tag">
+        STEP 01 / 12
+    </div>
+
+    <div class="progress">
+        <span id="progressBar"></span>
+    </div>
+
+    <div class="panel">
+
+        <p id="story" class="subtitle"></p>
+
+        <div id="choices"></div>
+
+        <div id="gameError" class="error"></div>
+
+        <div class="actions">
+            <button id="confirmChoice" disabled>
+                CONFIRM DECISION
+            </button>
+
+            <button id="quitMission" class="secondary">
+                EXIT MISSION
+            </button>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- RESULT -->
+
+<section id="result" class="screen">
+
+    <div class="panel center">
+
+        <div class="eyebrow">AFTER ACTION REPORT</div>
+
+        <div class="radar"></div>
+
+        <h1 id="resultTitle" class="title">
+            MISSION COMPLETE
+        </h1>
+
+        <p id="resultText" class="subtitle"></p>
+
+        <div id="quote" class="quote"></div>
+
+        <div class="actions" style="justify-content:center">
+
+            <button id="nextMission">
+                CONTINUE
+            </button>
+
+            <button id="retryMission" class="secondary">
+                RETRY
+            </button>
+
+            <button id="backMissions" class="secondary">
+                BACK TO MISSIONS
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<script>
+
+// ==========================================
+// ROLE DATABASE
+// ==========================================
+
+const roles = {
+
+    infantry: {
+        name: "INFANTRY",
+        color: "#39d66f",
+        desc: "Unit darat yang bertugas mengoordinasikan personel, jalur bantuan, dan keselamatan warga."
+    },
+
+    special: {
+        name: "SPECIAL FORCES",
+        color: "#ff4d55",
+        desc: "Tim khusus yang berfokus pada verifikasi informasi, komunikasi, dan koordinasi tim."
+    },
+
+    airborne: {
+        name: "AIRBORNE",
+        color: "#65dfff",
+        desc: "Unit penerjun yang bertugas menyatukan personel dan mengoordinasikan bantuan."
+    },
+
+    airforce: {
+        name: "AIR FORCE PILOT",
+        color: "#2865c7",
+        desc: "Awak udara yang berfokus pada keselamatan penerbangan dan komunikasi pusat kendali."
+    },
+
+    staff: {
+        name: "COMMAND STAFF",
+        color: "#f2f5fa",
+        desc: "Staf komando yang mengelola informasi, logistik, komunikasi, dan koordinasi seluruh unit."
+    }
+
+};
+
+
+// ==========================================
+// MISSION DATABASE
+// ==========================================
+
+const missions = {
+
+infantry: [
+["NO MAN'S LAND","Regu darat kehilangan komunikasi dengan beberapa pos bantuan."],
+["BROKEN FRONT","Laporan personel tidak sesuai dengan daftar pusat."],
+["FROZEN HORIZON","Cuaca buruk menghambat jalur bantuan."],
+["LAST CHECKPOINT","Sebuah pos belum memberikan laporan kondisi."],
+["THE CONVOY","Konvoi bantuan membutuhkan koordinasi ulang."],
+["FINAL HOUR","Seluruh unit harus menyelesaikan operasi bersama."]
+],
+
+special: [
+["SHADOW FILE","Informasi operasi memiliki beberapa bagian yang belum terverifikasi."],
+["SILENT CONTACT","Tim kehilangan kontak dengan penghubung lapangan."],
+["FALSE SIGNAL","Pusat kendali menerima laporan yang bertentangan."],
+["COLD TRACE","Catatan lama perlu diperiksa kembali."],
+["BROKEN CODE","Informasi antarunit tidak tersampaikan dengan benar."],
+["FINAL PROTOCOL","Tim harus menyatukan seluruh hasil investigasi."]
+],
+
+airborne: [
+["NO MAN'S LAND","Unit airborne berkumpul setelah simulasi pendaratan."],
+["LOST FORMATION","Daftar personel penerjun belum lengkap."],
+["SKYFALL","Perubahan cuaca mengganggu jadwal bantuan."],
+["RENDEZVOUS","Seluruh anggota harus kembali terdata."],
+["CLEAR HORIZON","Unit bantuan menunggu konfirmasi titik koordinasi."],
+["FINAL DESCENT","Operasi airborne mencapai tahap akhir."]
+],
+
+airforce: [
+["BLUE SKIES","Kru udara memulai simulasi misi bantuan."],
+["RADAR SILENCE","Pusat kendali menerima data yang tidak konsisten."],
+["CLOUD BREAK","Cuaca mengubah jadwal penerbangan."],
+["LOST VECTOR","Informasi navigasi simulasi harus diperiksa."],
+["LAST FLIGHT","Kru harus menyelesaikan koordinasi penerbangan."],
+["FINAL APPROACH","Seluruh laporan penerbangan dikumpulkan."]
+],
+
+staff: [
+["COMMAND ROOM","Staf menerima tanggung jawab koordinasi operasi gabungan."],
+["BROKEN CHAIN","Laporan dari beberapa bagian tidak cocok."],
+["SUPPLY LINES","Bagian logistik menemukan selisih persediaan."],
+["DOUBLE ORDER","Dua unit menerima instruksi berbeda."],
+["OPERATION CONTROL","Seluruh kepala unit meminta keputusan."],
+["FINAL DIRECTIVE","Staf harus menyelesaikan laporan operasi."]
+]
+
+};
+
+
+// ==========================================
+// STORY STEPS
+// ==========================================
+
+const steps = [
+
+"Situasi awal diterima. Informasi dari beberapa unit belum lengkap.",
+
+"Sebuah laporan baru masuk dan perlu diperiksa.",
+
+"Tim meminta arahan mengenai prioritas pekerjaan.",
+
+"Komunikasi antarbagian mengalami keterlambatan.",
+
+"Daftar personel dan kebutuhan harus diperiksa.",
+
+"Unit bantuan meminta informasi tambahan.",
+
+"Dua laporan memberikan informasi yang berbeda.",
+
+"Seorang anggota menyampaikan pembaruan situasi.",
+
+"Kondisi lingkungan berubah dan rencana perlu ditinjau.",
+
+"Pusat kendali meminta laporan perkembangan.",
+
+"Seluruh unit menunggu keputusan akhir.",
+
+"Operasi memasuki tahap evaluasi dan penutupan."
+
+];
+
+
+// ==========================================
+// DECISION DATABASE
+// ==========================================
+
+const decisions = [
+
+[
+"Periksa laporan sebelum mengambil keputusan.",
+"Konfirmasi informasi dari sumber kedua.",
+"Teruskan laporan awal tanpa pemeriksaan."
+],
+
+[
+"Catat informasi dan cocokkan dengan data resmi.",
+"Tunggu pembaruan dari unit terkait.",
+"Anggap semua laporan sudah benar."
+],
+
+[
+"Prioritaskan keselamatan dan kebutuhan personel.",
+"Bandingkan beberapa alternatif terlebih dahulu.",
+"Ambil keputusan tanpa mempertimbangkan kondisi."
+],
+
+[
+"Gunakan jalur komunikasi cadangan yang disetujui.",
+"Minta laporan singkat dari setiap unit.",
+"Abaikan keterlambatan komunikasi."
+],
+
+[
+"Periksa kebutuhan berdasarkan daftar personel.",
+"Bagikan sumber daya secara terkoordinasi.",
+"Gunakan seluruh persediaan untuk satu bagian."
+],
+
+[
+"Koordinasikan kebutuhan dengan unit bantuan.",
+"Verifikasi informasi sebelum menjawab.",
+"Berikan jawaban tanpa pemeriksaan."
+],
+
+[
+"Bandingkan kedua laporan dan cari kepastian.",
+"Mintalah klarifikasi kepada pihak terkait.",
+"Pilih laporan pertama secara langsung."
+],
+
+[
+"Catat pembaruan dan verifikasi sumbernya.",
+"Bagikan informasi setelah pemeriksaan.",
+"Sebarkan kabar yang belum dipastikan."
+],
+
+[
+"Tinjau ulang rencana berdasarkan kondisi baru.",
+"Koordinasikan perubahan dengan pusat kendali.",
+"Tetap gunakan rencana lama tanpa evaluasi."
+],
+
+[
+"Kirim laporan yang lengkap dan jujur.",
+"Periksa kembali data sebelum mengirim.",
+"Sembunyikan informasi yang belum selesai."
+],
+
+[
+"Pastikan semua unit menerima instruksi yang sama.",
+"Minta konfirmasi penerimaan instruksi.",
+"Kirim informasi berbeda ke setiap unit."
+],
+
+[
+"Tutup operasi setelah evaluasi selesai.",
+"Pastikan seluruh personel sudah terdata.",
+"Nyatakan operasi selesai tanpa pemeriksaan."
+]
+
+];
+
+
+// ==========================================
+// ENDING QUOTES
+// ==========================================
+
+const quotes = [
+
+"“The only thing we have to fear is fear itself.” — Franklin D. Roosevelt",
+
+"“Well done is better than well said.” — Benjamin Franklin",
+
+"“Fortune favors the bold.” — Latin proverb",
+
+"“It is not enough to be busy; so are the ants.” — Henry David Thoreau",
+
+"“Great spirits have always encountered violent opposition.” — Albert Einstein",
+
+"“Courage is grace under pressure.” — Ernest Hemingway"
+
+];
+
+
+// ==========================================
+// GAME STATE
+// ==========================================
+
+let username = null;
+let role = null;
+let mission = 1;
+let step = 0;
+let score = 0;
+let selected = -1;
+let completed = {};
+
+const $ = id => document.getElementById(id);
+
+
+// ==========================================
+// PAGE TRANSITIONS
+// ==========================================
+
+function showPage(id) {
+
+    document.querySelectorAll(".screen").forEach(page => {
+        page.classList.remove("active");
+    });
+
+    $(id).classList.add("active");
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+}
+
+
+// ==========================================
+// API CONNECTION
+// ==========================================
+
+async function api(path, data = null, method = "POST") {
+
+    const options = {
+        method,
+        credentials: "same-origin",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    };
+
+    if (data !== null) {
+        options.body = JSON.stringify(data);
+    }
+
+    const response = await fetch(path, options);
+
+    const result = await response.json();
+
+    if (!response.ok || !result.ok) {
+        throw new Error(result.error || "Server error.");
+    }
+
+    return result;
+
+}
+
+
+// ==========================================
+// USER STATUS
+// ==========================================
+
+function setStatus(text, color) {
+
+    $("status").innerHTML = `
+        <span class="status-dot"
+        style="background:${color};color:${color}">
+        </span>
+        STATUS: ${text}
+    `;
+
+}
+
+
+
+async function enterSystem(data) {
+
+    username = data.username;
+    role = data.role || null;
+    completed = data.completed || {};
+
+    $("welcomeName").textContent =
+        "PERSONNEL: " + username;
+
+    if (role && roles[role]) {
+        setStatus(roles[role].name, roles[role].color);
+    } else {
+        setStatus(username, "#6bd5ff");
+    }
+
+    $("password").value = "";
+
+    $("loading").style.display = "flex";
+    $("loading").style.opacity = "1";
+
+    await new Promise(resolve => setTimeout(resolve, 1100));
+
+    $("loading").style.opacity = "0";
+
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    $("loading").style.display = "none";
+
+    showPage("hub");
+}
+
+
+// ==========================================
+// LOGIN
+// ==========================================
+
+$("loginBtn").onclick = async () => {
+
+    try {
+
+        $("authError").textContent = "Connecting...";
+
+        const data = await api("/api/login", {
+            username: $("username").value,
+            password: $("password").value
+        });
+
+        enterSystem(data);
+
+    } catch (e) {
+
+        $("authError").textContent = e.message;
+
+    }
+
+};
+
+
+// ==========================================
+// REGISTER
+// ==========================================
+
+$("registerBtn").onclick = async () => {
+
+    try {
+
+        $("authError").textContent = "Creating account...";
+
+        const data = await api("/api/register", {
+            username: $("username").value,
+            password: $("password").value
+        });
+
+        enterSystem(data);
+
+    } catch (e) {
+
+        $("authError").textContent = e.message;
+
+    }
+
+};
+
+
+// ==========================================
+// LOGOUT
+// ==========================================
+
+$("backLogin").onclick = async () => {
+
+    try {
+
+        await api("/api/logout", {});
+
+        username = null;
+        role = null;
+        completed = {};
+
+        setStatus("SYSTEM OFFLINE", "#71869a");
+
+        showPage("auth");
+
+    } catch (e) {
+
+        alert(e.message);
+
+    }
+
+};
+
+
+// ==========================================
+// ROLE MENU
+// ==========================================
+
+$("toRoles").onclick = () => {
+
+    renderRoles();
+    showPage("roles");
+
+};
+
+
+$("rolesBack").onclick = () => {
+    showPage("hub");
+};
+
+
+function renderRoles() {
+
+    $("roleCards").innerHTML = Object.entries(roles)
+        .map(([id, data]) => `
+
+        <article class="card">
+
+            <div class="tag">PERSONNEL CLASS</div>
+
+            <h3 style="color:${data.color}">
+                ${data.name}
+            </h3>
+
+            <p>${data.desc}</p>
+
+            <button data-role="${id}">
+                SELECT ROLE
+            </button>
+
+        </article>
+
+    `).join("");
+
+
+    document.querySelectorAll("[data-role]").forEach(button => {
+
+        button.onclick = () => {
+            chooseRole(button.dataset.role);
+        };
+
+    });
+
+}
+
+
+async function chooseRole(id) {
+
+    try {
+
+        await api("/api/role", {
+            role: id
+        });
+
+        role = id;
+
+        setStatus(roles[id].name, roles[id].color);
+
+        renderMissions();
+
+        showPage("missions");
+
+    } catch (e) {
+
+        alert(e.message);
+
+    }
+
+}
+
+
+// ==========================================
+// MISSION MENU
+// ==========================================
+
+function unlocked(number) {
+
+    if (number === 1) return true;
+
+    return !!completed[`${role}#${number-1}`]?.success;
+
+}
+
+
+function renderMissions() {
+
+    const list = missions[role];
+
+    $("roleDescription").textContent =
+        roles[role].desc;
+
+    $("missionCards").innerHTML = list.map((data, index) => {
+
+        const number = index + 1;
+
+        const done = !!completed[`${role}#${number}`]?.success;
+        const available = unlocked(number);
+
+        let status = "LOCKED";
+
+        if (done) status = "COMPLETE";
+        else if (available) status = "AVAILABLE";
+
+        return `
+
+        <article class="card">
+
+            <div class="tag">
+                MISSION 0${number} · ${status}
+            </div>
+
+            <h3>${data[0]}</h3>
+
+            <p>${data[1]}</p>
+
+            <button
+                data-mission="${number}"
+                ${available ? "" : "disabled"}>
+
+                ${done ? "PLAY AGAIN" :
+                  available ? "START MISSION" :
+                  "LOCKED"}
+
+            </button>
+
+        </article>
+
+        `;
+
+    }).join("");
+
+
+    document.querySelectorAll("[data-mission]").forEach(button => {
+
+        button.onclick = () => {
+            startMission(Number(button.dataset.mission));
+        };
+
+    });
+
+}
+
+
+$("missionsBack").onclick = () => {
+
+    renderRoles();
+    showPage("roles");
+
+};
+
+
+// ==========================================
+// START MISSION
+// ==========================================
+
+function startMission(number) {
+
+    mission = number;
+    step = 0;
+    score = 0;
+    selected = -1;
+
+    showPage("game");
+
+    renderStep();
+
+}
+
+
+// ==========================================
+// STORY ENGINE
+// ==========================================
+
+function renderStep() {
+
+    const current = missions[role][mission - 1];
+
+    $("missionTag").textContent =
+        roles[role].name + " · OPERATION 0" + mission;
+
+    $("missionTitle").textContent = current[0];
+
+    $("stepLabel").textContent =
+        `STEP ${String(step+1).padStart(2,"0")} / 12`;
+
+    $("progressBar").style.width =
+        ((step / 12) * 100) + "%";
+
+    $("story").textContent =
+        steps[step] + " " + current[1];
+
+    $("choices").innerHTML = decisions[step]
+        .map((choice, index) => `
+
+            <button class="choice"
+                data-choice="${index}">
+
+                ${String.fromCharCode(65+index)}.
+                ${choice}
+
+            </button>
+
+        `).join("");
+
+
+    selected = -1;
+
+    $("confirmChoice").disabled = true;
+
+    document.querySelectorAll("[data-choice]").forEach(button => {
+
+        button.onclick = () => {
+
+            selected = Number(button.dataset.choice);
+
+            document.querySelectorAll(".choice").forEach(b => {
+                b.classList.remove("selected");
+            });
+
+            button.classList.add("selected");
+
+            $("confirmChoice").disabled = false;
+
+        };
+
+    });
+
+}
+
+
+// ==========================================
+// DECISION ENGINE
+// ==========================================
+
+$("confirmChoice").onclick = () => {
+
+    if (selected < 0) return;
+
+    const points = [2, 1, -2];
+
+    score += points[selected];
+
+    step++;
+
+    selected = -1;
+
+    if (step < 12) {
+
+        renderStep();
+
+    } else {
+
+        finishMission();
+
+    }
+
+};
+
+
+// ==========================================
+// END MISSION
+// ==========================================
+
+async function finishMission() {
+
+    const good = score >= 16;
+
+    const ending = good ? "good" : "bad";
+
+    $("resultTitle").textContent =
+        good
+        ? (mission === 6 ? "CAMPAIGN COMPLETE" : "MISSION COMPLETE")
+        : "MISSION FAILED";
+
+    $("resultText").textContent = good
+        ? `Operasi ${missions[role][mission-1][0]} berhasil diselesaikan. Seluruh koordinasi berjalan dengan baik.`
+        : "Operasi belum mencapai tujuan. Evaluasi keputusanmu dan ulangi misi ini.";
+
+    $("quote").textContent =
+        quotes[(mission - 1 + Object.keys(roles).indexOf(role)) % quotes.length];
+
+    $("nextMission").classList.toggle(
+        "hidden",
+        !good || mission === 6
+    );
+
+    $("retryMission").classList.toggle(
+        "hidden",
+        good
+    );
+
+    try {
+
+        const data = await api("/api/progress", {
+            role: role,
+            mission: mission,
+            ending: ending
+        });
+
+        completed = data.completed;
+
+    } catch (e) {
+
+        $("resultText").textContent +=
+            " Progres gagal disimpan: " + e.message;
+
+    }
+
+    showPage("result");
+
+}
+
+
+// ==========================================
+// RESULT BUTTONS
+// ==========================================
+
+$("retryMission").onclick = () => {
+
+    startMission(mission);
+
+};
+
+
+$("backMissions").onclick = () => {
+
+    renderMissions();
+
+    showPage("missions");
+
+};
+
+
+$("nextMission").onclick = () => {
+
+    if (mission < 6) {
+
+        renderMissions();
+
+        startMission(mission + 1);
+
+    }
+
+};
+
+
+// ==========================================
+// EXIT MISSION
+// ==========================================
+
+$("quitMission").onclick = () => {
+
+    renderMissions();
+
+    showPage("missions");
+
+};
+
+
+// ==========================================
+// INITIALIZATION
+// ==========================================
+
+async function initialize() {
+
+    await new Promise(resolve => setTimeout(resolve, 1300));
+
+    $("loading").style.opacity = "0";
+
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    $("loading").style.display = "none";
+
+    try {
+
+        const data = await api("/api/me", null, "GET");
+
+        enterSystem(data);
+
+    } catch {
+
+        setStatus("SYSTEM OFFLINE", "#71869a");
+
+        showPage("auth");
+
+    }
+
+}
+
+initialize();
+
+</script>
+
+</body>
+</html>
