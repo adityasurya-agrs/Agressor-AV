@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#071321">
+<title>TASK FORCE 141 | Operations</title>
+<style>
+:root{--bg:#071321;--panel:#0d2033;--panel2:#102941;--line:#24425c;--text:#e8f1fa;--muted:#91a8bd;--cyan:#6bd5ff;--green:#72d572;--red:#ff6868}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% -20%,#173b59 0,#071321 48%,#040b13 100%);color:var(--text);font-family:Arial,Helvetica,sans-serif;min-height:100vh}
+button,input{font:inherit}button{cursor:pointer}.hidden{display:none!important}
+.topbar{height:64px;border-bottom:1px solid #20394f;background:#071321dd;display:flex;align-items:center;justify-content:space-between;padding:0 5%;position:sticky;top:0;z-index:5;backdrop-filter:blur(10px)}
+.brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:2px}.mini-radar{width:34px;height:34px;border:1px solid var(--cyan);border-radius:50%;position:relative;overflow:hidden;background:repeating-radial-gradient(circle,transparent 0 7px,#28506a 8px 9px)}.mini-radar:after{content:"";position:absolute;width:50%;height:50%;left:50%;top:0;transform-origin:bottom left;background:linear-gradient(45deg,#6bd5ff99,transparent 70%);animation:spin 4s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}.status{font-size:12px;color:var(--muted);letter-spacing:1px}.status b{color:var(--cyan)}
+main{width:min(1100px,92%);margin:38px auto 70px}.screen{animation:fade .35s ease}@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.hero{text-align:center;padding:36px 0 28px}.radar{width:112px;height:112px;margin:0 auto 22px;border:1px solid #4ba6ce;border-radius:50%;position:relative;background:repeating-radial-gradient(circle,transparent 0 20px,#234861 21px 22px);box-shadow:0 0 35px #2b9ac533}.radar:before{content:"";position:absolute;inset:50% 0 0 50%;transform-origin:top left;background:linear-gradient(135deg,#6bd5ff99,transparent 65%);animation:spin 5s linear infinite}.radar:after{content:"";position:absolute;width:8px;height:8px;border-radius:50%;background:var(--cyan);left:calc(50% - 4px);top:calc(50% - 4px);box-shadow:0 0 15px var(--cyan)}
+h1{font-size:clamp(28px,5vw,48px);letter-spacing:5px;margin:0 0 10px}h2{font-size:22px;letter-spacing:2px;margin:0 0 10px}h3{margin:0 0 8px}.eyebrow{color:var(--cyan);font-size:11px;letter-spacing:3px;text-transform:uppercase}.muted{color:var(--muted);line-height:1.6}.panel{background:linear-gradient(145deg,#102941ee,#0a1a2aee);border:1px solid var(--line);border-radius:14px;padding:24px;box-shadow:0 18px 50px #0003}.auth{max-width:430px;margin:0 auto}.tabs{display:flex;gap:8px;margin:18px 0}.tab{flex:1;background:#091827;border:1px solid var(--line);color:var(--muted);padding:11px;border-radius:8px}.tab.active{color:var(--cyan);border-color:var(--cyan);background:#123047}
+.field{display:block;margin:14px 0}.field span{display:block;font-size:12px;color:var(--muted);margin-bottom:7px}.field input{width:100%;padding:13px 14px;background:#061321;border:1px solid #29445d;border-radius:8px;color:white;outline:none}.field input:focus{border-color:var(--cyan)}
+.btn{border:1px solid #4a8eaf;background:linear-gradient(120deg,#176184,#10405d);color:#fff;border-radius:8px;padding:12px 17px;font-weight:700;letter-spacing:.5px}.btn:hover{filter:brightness(1.16)}.btn.secondary{background:#10243a;border-color:#34506a;color:#c5d7e8}.btn.danger{border-color:#854747;background:#49252b}.btn:disabled{opacity:.4;cursor:not-allowed}.wide{width:100%}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.between{justify-content:space-between}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:20px}.role,.mission,.choice{background:#0a1b2b;border:1px solid #29445d;border-radius:11px;padding:18px;text-align:left;color:var(--text);width:100%;transition:.2s}.role:hover,.mission:hover,.choice:hover{border-color:var(--cyan);transform:translateY(-2px)}.role .dot{width:9px;height:9px;display:inline-block;border-radius:50%;margin-right:8px}.role p,.mission p,.choice p{font-size:13px;color:var(--muted);line-height:1.5;margin:9px 0 0}.mission.locked{opacity:.42;cursor:not-allowed}.tag{display:inline-block;font-size:10px;letter-spacing:1px;color:var(--cyan);border:1px solid #315b73;padding:5px 8px;border-radius:20px;margin-bottom:10px}.progress{height:7px;background:#071321;border-radius:10px;overflow:hidden;margin:12px 0}.progress span{display:block;height:100%;background:linear-gradient(90deg,#247ca4,#6bd5ff);width:0;transition:width .3s}.story{font-size:17px;line-height:1.8;margin:20px 0}.choice{display:block;margin:10px 0}.choice strong{display:block}.choice p{margin-top:5px}.notice{padding:12px 14px;border-radius:8px;background:#10283a;color:#b7d5e8;font-size:13px;margin:14px 0}.notice.error{background:#3b2027;color:#ffb7b7}.notice.good{background:#173426;color:#b8f0c6}.footer{text-align:center;color:#587087;font-size:11px;margin-top:45px;letter-spacing:1px}.loading{position:fixed;inset:0;background:#06111d;display:grid;place-items:center;z-index:20}.loading-inner{text-align:center}.spinner{width:44px;height:44px;border:2px solid #24445d;border-top-color:var(--cyan);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 18px}
+@media(max-width:600px){.topbar{padding:0 4%;height:58px}.brand{font-size:12px;letter-spacing:1px}.status{font-size:10px}main{margin-top:20px}.panel{padding:18px}.hero{padding-top:22px}h1{letter-spacing:3px}}
+</style>
+</head>
+<body>
+<div id="loading" class="loading"><div class="loading-inner"><div class="spinner"></div><div class="eyebrow">Establishing secure connection</div><p class="muted">TASK FORCE 141</p></div></div>
+<header class="topbar">
+  <div class="brand"><div class="mini-radar"></div><span>TASK FORCE 141</span></div>
+  <div class="status" id="personnel">PERSONNEL: <b>NOT SIGNED IN</b></div>
+</header>
+<main>
+  <section id="authScreen" class="screen hidden">
+    <div class="hero"><div class="radar"></div><div class="eyebrow">Joint Operations Command</div><h1>TASK FORCE 141</h1><p class="muted">One team. Five perspectives. One shared campaign.</p></div>
+    <div class="panel auth">
+      <h2 id="authTitle">PERSONNEL ACCESS</h2><p class="muted">Masuk untuk melanjutkan catatan operasi kamu.</p>
+      <div class="tabs"><button class="tab active" id="loginTab">LOGIN</button><button class="tab" id="registerTab">REGISTER</button></div>
+      <form id="authForm">
+        <label class="field"><span>USERNAME</span><input id="username" minlength="3" maxlength="24" autocomplete="username" required placeholder="Contoh: operator141"></label>
+        <label class="field"><span>PASSWORD</span><input id="password" type="password" minlength="8" maxlength="128" autocomplete="current-password" required placeholder="Minimal 8 karakter"></label>
+        <button class="btn wide" id="authSubmit" type="submit">ACCESS SYSTEM</button>
+      </form><div id="authMessage"></div>
+      <p class="muted" style="font-size:11px">Gunakan akun game milikmu sendiri. Password disimpan sebagai hash di database.</p>
+    </div>
+  </section>
+
+  <section id="menuScreen" class="screen hidden">
+    <div class="hero"><div class="eyebrow">Operations Command Center</div><h1>WELCOME, <span id="welcomeName">OPERATOR</span></h1><p class="muted">Pilih spesialisasi untuk melihat rangkaian misi masing-masing unit.</p></div>
+    <div class="row between"><div><div class="eyebrow">Personnel assignment</div><h2>SELECT ROLE</h2></div><button class="btn secondary" id="logoutBtn">LOG OUT</button></div>
+    <div class="grid" id="roleGrid"></div>
+    <div id="menuMessage"></div>
+  </section>
+
+  <section id="missionsScreen" class="screen hidden">
+    <div class="row between"><div><div class="eyebrow">Unit assignment</div><h2 id="roleHeading">SELECTED ROLE</h2><p class="muted" id="roleDescription"></p></div><button class="btn secondary" id="backRoles">CHANGE ROLE</button></div>
+    <div class="panel" style="margin-top:18px"><div class="row between"><div><div class="eyebrow">Campaign progress</div><h3 id="campaignCount">0 / 6 missions complete</h3></div><div class="tag" id="roleTag">UNIT</div></div><div class="progress"><span id="campaignBar"></span></div><div class="grid" id="missionGrid"></div></div>
+  </section>
+
+  <section id="gameScreen" class="screen hidden">
+    <div class="row between"><div><div class="eyebrow" id="missionEyebrow">MISSION 01</div><h2 id="missionTitle">MISSION TITLE</h2><p class="muted" id="missionLocation"></p></div><button class="btn secondary" id="backMissions">MISSIONS</button></div>
+    <div class="panel" style="margin-top:18px">
+      <div class="row between"><span class="tag" id="stepTag">STEP 01 / 12</span><span class="muted" id="roleInGame"></span></div>
+      <div class="progress"><span id="stepBar"></span></div>
+      <p class="muted" id="campaignContext"></p>
+      <div class="story" id="storyText"></div>
+      <h3>YOUR DECISION</h3><div id="choiceList"></div><div id="gameMessage"></div>
+    </div>
+  </section>
+
+  <section id="resultScreen" class="screen hidden">
+    <div class="hero"><div class="radar"></div><div class="eyebrow">Mission debrief</div><h1 id="resultTitle">MISSION COMPLETE</h1><p class="muted" id="resultText"></p></div>
+    <div class="panel auth"><div id="resultNotice" class="notice"></div><div class="row"><button class="btn wide" id="retryBtn">RETRY MISSION</button><button class="btn secondary wide" id="nextBtn">NEXT MISSION</button></div><button class="btn secondary wide" id="resultBack" style="margin-top:10px">BACK TO MISSIONS</button></div>
+  </section>
+  <div class="footer">FICTIONAL TRAINING SIMULATION · TASK FORCE 141</div>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+let csrfToken = "";
+let authMode = "login";
+let gameState = null;
+let activeRole = null;
+let activeMission = 1;
+let currentMissionData = null;
+
+async function api(path, method="GET", body=null){
+  const options={method,credentials:"same-origin",headers:{}};
+  if(method!=="GET"){options.headers["X-CSRF-Token"]=csrfToken;}
+  if(body!==null){options.headers["Content-Type"]="application/json";options.body=JSON.stringify(body);}
+  const response=await fetch("/api"+path,options);
+  const data=await response.json().catch(()=>({ok:false,error:"Respons server tidak terbaca."}));
+  if(!response.ok || data.ok===false) throw new Error(data.error||"Permintaan gagal.");
+  if(data.csrf_token) csrfToken=data.csrf_token;
+  return data;
+}
+function show(id){["authScreen","menuScreen","missionsScreen","gameScreen","resultScreen"].forEach(x=>$(x).classList.toggle("hidden",x!==id));}
+function message(id,text,type="error"){const el=$(id);el.innerHTML="";if(!text)return;const div=document.createElement("div");div.className="notice "+type;div.textContent=text;el.appendChild(div);}
+function setPersonnel(value){$("personnel").innerHTML="PERSONNEL: <b></b>";$("personnel").querySelector("b").textContent=value;}
+function setAuthMode(mode){authMode=mode;$("loginTab").classList.toggle("active",mode==="login");$("registerTab").classList.toggle("active",mode==="register");$("authTitle").textContent=mode==="login"?"PERSONNEL ACCESS":"NEW PERSONNEL";$("authSubmit").textContent=mode==="login"?"ACCESS SYSTEM":"CREATE ACCOUNT";$("password").autocomplete=mode==="login"?"current-password":"new-password";message("authMessage","");}
+$("loginTab").onclick=()=>setAuthMode("login");$("registerTab").onclick=()=>setAuthMode("register");
+$("authForm").onsubmit=async e=>{e.preventDefault();$("authSubmit").disabled=true;message("authMessage","");try{const data=await api(authMode==="login"?"/login":"/register","POST",{username:$("username").value,password:$("password").value});csrfToken=data.csrf_token;await openMenu(data.username);}catch(err){message("authMessage",err.message);}finally{$("authSubmit").disabled=false;}};
+async function transitionLoading(label="Synchronizing personnel records"){const box=$("loading");box.classList.remove("hidden");box.querySelector(".eyebrow").textContent=label;await new Promise(resolve=>setTimeout(resolve,650));}
+async function openMenu(username){await transitionLoading("Loading personnel profile");try{$("welcomeName").textContent=username.toUpperCase();setPersonnel(username);await refreshState();renderRoles();show("menuScreen");}finally{$("loading").classList.add("hidden");}}
+async function refreshState(){gameState=await api("/game/state");}
+function renderRoles(){const grid=$("roleGrid");grid.innerHTML="";Object.entries(gameState.roles).forEach(([key,role])=>{const p=gameState.progress[key];const card=document.createElement("button");card.className="role";const dot=document.createElement("span");dot.className="dot";dot.style.background=role.color;const title=document.createElement("h3");title.append(dot,document.createTextNode(role.name));const desc=document.createElement("p");desc.textContent=role.description;const stat=document.createElement("p");stat.textContent=`${p.completed_missions.length} / 6 missions complete`;card.append(title,desc,stat);card.onclick=()=>selectRole(key);grid.append(card);});}
+async function selectRole(role){try{await api("/role","POST",{role});activeRole=role;renderMissions();show("missionsScreen");setPersonnel(gameState.roles[role].name.toUpperCase());}catch(err){message("menuMessage",err.message);}}
+function renderMissions(){const role=gameState.roles[activeRole],p=gameState.progress[activeRole];$("roleHeading").textContent=role.name.toUpperCase();$("roleDescription").textContent=role.description;$("roleTag").textContent=role.name.toUpperCase();$("campaignCount").textContent=`${p.completed_missions.length} / 6 missions complete`;$("campaignBar").style.width=(p.completed_missions.length/6*100)+"%";const grid=$("missionGrid");grid.innerHTML="";gameState.missions[activeRole].forEach(m=>{const unlocked=m.number<=p.unlocked_mission||p.completed_missions.includes(m.number);const done=p.completed_missions.includes(m.number);const b=document.createElement("button");b.className="mission"+(!unlocked?" locked":"");const tag=document.createElement("span");tag.className="tag";tag.textContent=done?"COMPLETED":unlocked?"AVAILABLE":"LOCKED";const h=document.createElement("h3");h.textContent=`${String(m.number).padStart(2,"0")} · ${m.title}`;const loc=document.createElement("p");loc.textContent=m.location;const brief=document.createElement("p");brief.textContent=m.brief;b.append(tag,h,loc,brief);b.disabled=!unlocked;b.onclick=()=>startMission(m.number);grid.append(b);});}
+async function startMission(number){try{await api("/mission/start","POST",{role:activeRole,mission:number});activeMission=number;await loadCurrentMission();}catch(err){message("menuMessage",err.message);}}
+async function loadCurrentMission(){currentMissionData=await api("/mission/current?role="+encodeURIComponent(activeRole));if(currentMissionData.status==="success"||currentMissionData.status==="failed"){showResult(currentMissionData.result);return;}renderStep();show("gameScreen");}
+function renderStep(){const m=currentMissionData;$("missionEyebrow").textContent=`MISSION ${String(m.mission).padStart(2,"0")}`;$("missionTitle").textContent=m.mission_title;$("missionLocation").textContent=m.location;$("stepTag").textContent=`STEP ${String(m.step.number).padStart(2,"0")} / 12`;$("stepBar").style.width=(m.step.number/12*100)+"%";$("roleInGame").textContent=m.role_name;$("campaignContext").textContent=m.step.campaign_context;$("storyText").textContent=m.step.narrative;const list=$("choiceList");list.innerHTML="";m.step.options.forEach((option,index)=>{const b=document.createElement("button");b.className="choice";const strong=document.createElement("strong");strong.textContent=`${index+1}. ${option.label}`;const p=document.createElement("p");p.textContent=option.detail;b.append(strong,p);b.onclick=()=>choose(index);list.append(b);});message("gameMessage","");}
+async function choose(index){document.querySelectorAll("#choiceList button").forEach(b=>b.disabled=true);try{const result=await api("/mission/choose","POST",{role:activeRole,choice:index});if(result.finished){await refreshState();showResult(result.result,result.campaign_complete);}else{await loadCurrentMission();}}catch(err){message("gameMessage",err.message);document.querySelectorAll("#choiceList button").forEach(b=>b.disabled=false);}}
+function showResult(result,campaignComplete=false){const success=result==="success";const closingLines=["“A clear signal can bring people together.” — Command Log","“The mission ends; responsibility continues.” — Operations Desk","“Trust is built one verified report at a time.” — Joint Staff","“A team is strongest when every voice is heard.” — Field Notes","“Recovery begins with the choices we make.” — Mission Archive"];$("resultTitle").textContent=campaignComplete?"CAMPAIGN COMPLETE":success?"MISSION COMPLETE":"MISSION FAILED";$("resultText").textContent=campaignComplete?"Semua unit telah menyelesaikan rangkaian tugas. Krisis mereda dan proses pemulihan dimulai.":success?"Keputusan tim menjaga koordinasi tetap berjalan. Misi berhasil diselesaikan.":"Hasil keputusan belum memenuhi standar misi. Tinjau kembali pilihanmu dan coba lagi.";if(campaignComplete){$("resultText").textContent+=" "+closingLines[Math.floor(Math.random()*closingLines.length)];}$("resultNotice").textContent=success?"Catatan misi berhasil disimpan. Misi berikutnya terbuka jika masih tersedia.":"Misi belum berhasil. Kamu dapat mengulang misi ini."; $("resultNotice").className="notice "+(success?"good":"error");$("retryBtn").classList.remove("hidden");$("nextBtn").classList.toggle("hidden",!success||activeMission>=6);$("retryBtn").onclick=()=>startMission(activeMission);$("nextBtn").onclick=()=>startMission(activeMission+1);$("resultBack").onclick=async()=>{await refreshState();renderMissions();show("missionsScreen");};show("resultScreen");}
+$("backRoles").onclick=()=>{setPersonnel(gameState.username);show("menuScreen");};
+$("backMissions").onclick=async()=>{await refreshState();renderMissions();setPersonnel(gameState.roles[activeRole].name.toUpperCase());show("missionsScreen");};
+$("logoutBtn").onclick=async()=>{try{await api("/logout","POST");}catch(e){}activeRole=null;gameState=null;setPersonnel("NOT SIGNED IN");setAuthMode("login");show("authScreen");};
+async function boot(){try{const c=await api("/csrf");csrfToken=c.csrf_token;const me=await api("/me");if(me.authenticated){await openMenu(me.username);}else{show("authScreen");}}catch(err){show("authScreen");message("authMessage","API belum siap: "+err.message);}finally{$("loading").classList.add("hidden");}}
+boot();
+</script>
+</body>
+</html>
